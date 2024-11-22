@@ -12,7 +12,7 @@ export class Service{
         this.bucket = new this.bucket(this.client);
     }
 
-    async createPort(slug,{title,content,featureImage,status, userId}){
+    async createPost(slug,{title,content,featureImage,status, userId}){
         try{
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -58,6 +58,31 @@ export class Service{
                 slug)
         }catch(error){
             throw error;
+        }
+    }
+    async uploadFile(file){
+        try {
+            return await this.bucket.createFile(
+                conf.appwriteBucketId,
+                ID.unique(),
+                file
+            )
+        } catch (error) {
+            console.log("Appwrite serive :: uploadFile :: error", error);
+            return false
+        }
+    }
+
+    async deleteFile(fileId){
+        try {
+            await this.bucket.deleteFile(
+                conf.appwriteBucketId,
+                fileId
+            )
+            return true
+        } catch (error) {
+            console.log("Appwrite serive :: deleteFile :: error", error);
+            return false
         }
     }
 
