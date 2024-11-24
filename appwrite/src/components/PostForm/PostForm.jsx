@@ -2,7 +2,8 @@ import React, { useCallback } from 'react'
 import {useNavigate} from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import service from '../../Services/config'
-import {Input, RTE, Button} from '../index'
+import {Input, RTE, Button, Select} from '../index'
+import { useForm } from 'react-hook-form'
 
 
 const PostForm = ({post}) => {
@@ -11,10 +12,10 @@ const PostForm = ({post}) => {
     slug: post?.slug || '',
     content: post?.content || '',
     status: post?.status || 'active'})
-    const userData = useSelector(state => state.userData)
+    const userData = useSelector(state => state.auth.userData)
     const submit = async(data) =>{
         if(post){
-            const file = data.image[0] ? service.uploadFile(data.image[0]) : null;
+            const file = data.image[0] ? await service.uploadFile(data.image[0]) : null;
             if(file){
                 service.deleteFile(post.featuredImage)
             }
@@ -30,10 +31,13 @@ const PostForm = ({post}) => {
                 navigate(`/post/${dbPost.$id}`)
             }
         }else{
-            const file = data.image[0] ? service.uploadFile(data.image[0]) : null;
+            const file = data.image[0] ? await service.uploadFile(data.image[0]) : null;
             if(file){
                 data.featuredImage = file.$id;
-                const dbPost = service.createPost({...data,userId: userData.$id})
+                console.log(file.$id)
+                console.log(data)
+                const dbPost = await service.createPost({...data,userId: userData.$id})
+                
                 if(dbPost){
                     navigate(`/post/${dbPost.$id}`)
                 }
@@ -42,7 +46,7 @@ const PostForm = ({post}) => {
     }
     const slugtransform = useCallback((value) => {
         if(value && typeof value==='string'){
-            return value.trim().toLowerCase().replace(/^[a-z\d\s]+/g,'-').replace(/\s/g,'-')
+            return value.trim().toLowerCase().replace(/[^a-zA-Z\d\s]+/g,'-').replace(/\s/g,'-')
         }else{
             return '';
         }

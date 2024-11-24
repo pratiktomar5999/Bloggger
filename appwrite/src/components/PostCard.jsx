@@ -1,5 +1,5 @@
 import React from 'react'
-import { service } from '../Services/config'
+import service from '../Services/config'
 import { Link } from 'react-router-dom'
 
 const PostCard = ({$id,title,featuredImage}) => {

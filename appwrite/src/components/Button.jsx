@@ -5,7 +5,7 @@ export const Button = ({
     children,
     type='button',
     bgColor = 'bj-blue-600',
-    textColor='text-white',
+    textColor='text-black',
     className='',
     ...props
 }) => {

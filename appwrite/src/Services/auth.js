@@ -8,7 +8,7 @@ export class AuthService{
         this.client.setEndpoint(conf.appwriteUrl).setProject(conf.appwriteProjectId);
         this.account = new Account(this.client);
     }
-    async createAccount(email,password,name){
+    async createAccount({email,password,name}){
         try{
             const user = await this.account.create(
                 ID.unique(),
@@ -27,7 +27,7 @@ export class AuthService{
         }
     }
 
-    async login(email,password){
+    async login({email,password}){
         try{
             return await this.account.createEmailPasswordSession(email,password)
         }catch(error){
@@ -39,7 +39,7 @@ export class AuthService{
         try{
             return await this.account.get()
         }catch(error){
-            throw error;
+            console.log("Appwrite serive :: getCurrentUser :: error", error);
         }
         return null;
     }

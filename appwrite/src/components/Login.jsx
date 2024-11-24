@@ -7,6 +7,7 @@ import authService from "../Services/auth";
 import { useForm } from "react-hook-form";
 import { Logo } from "./logo";
 import { Button } from "./Button";
+import {Input} from './index'
 
 const Login = () => {
     const navigate = useNavigate();

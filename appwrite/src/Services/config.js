@@ -1,5 +1,5 @@
 import conf from "../cong/conf";
-import {Client, ID,Database, Storage, Query} from 'appwrite';
+import {Client, ID,Databases, Storage, Query} from 'appwrite';
 
 export class Service{
     client = new Client();
@@ -8,11 +8,38 @@ export class Service{
 
     constructor(){
         this.client.setEndpoint(conf.appwriteUrl).setProject(conf.appwriteProjectId);
-        this.databases = new Database(this.client);
-        this.bucket = new this.bucket(this.client);
+        this.databases = new Databases(this.client);
+        this.bucket = new Storage(this.client);
+    }
+    async getPost(slug){
+        try {
+            return await this.databases.getDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+                slug
+            )
+        } catch (error) {
+            console.log("Appwrite serive :: getPost :: error", error);
+            return false
+        }
     }
 
-    async createPost(slug,{title,content,featureImage,status, userId}){
+    async getPosts(queries = [Query.equal("status", "active")]){
+        try {
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+                queries,
+                
+
+            )
+        } catch (error) {
+            console.log("Appwrite serive :: getPosts :: error", error);
+            return false
+        }
+    }
+
+    async createPost({slug,title,content,featureImage,status, userId}){
         try{
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -27,7 +54,7 @@ export class Service{
                 }
             )
         }catch(error){
-            throw error;
+            console.log("Appwrite serive :: createPost :: error", error);
         }
     }
 

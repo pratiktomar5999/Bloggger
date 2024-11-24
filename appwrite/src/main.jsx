@@ -4,11 +4,67 @@ import './index.css'
 import App from './App.jsx'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import AuthLayout from './components/AuthLayout.jsx'
+import Signup from './pages/Signup.jsx'
+import Login from './pages/Login.jsx'
+import AllPosts from './pages/AllPosts.jsx'
+import AddPost from './pages/AddPost.jsx'
+import EditPost from './pages/EditPost.jsx'
+import Post from './pages/Post.jsx'
+import Home from './pages/Home.jsx'
+const Router = createBrowserRouter([
+  {path:'/',
+    element: <App/>,
+    children:[
+      {
+        path:'/',
+        element:<Home/>
+      },{
+        path:'/login',
+        element: (
+        <AuthLayout authentication={false}>
+          <Login/>
+        </AuthLayout>)
+      },{
+        path:'/signup',
+        element: (
+        <AuthLayout authentication={false}>
+          <Signup/>
+        </AuthLayout>)
+      },{
+        path:'/all-posts',
+        element: (
+        <AuthLayout>
+          <AllPosts/>
+        </AuthLayout>)
+      },{
+        path:'/add-post',
+        element: (
+        <AuthLayout>
+          <AddPost/>
+        </AuthLayout>)
+      },{
+        path:'/edit-post/:slug',
+        element: (
+        <AuthLayout>
+          <EditPost/>
+        </AuthLayout>)
+      },{
+        path:'/post/:slug',
+        element: (
+        <AuthLayout>
+          <Post/>
+        </AuthLayout>)
+      }
 
+    ]
+  }
+])
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-    <App />
+      <RouterProvider router={Router}/>
     </Provider>
   </StrictMode>,
 
